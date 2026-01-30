@@ -1,0 +1,189 @@
+import React, { useState } from 'react';
+import { ArrowRight, ArrowLeft, RotateCcw, Share2 } from 'lucide-react';
+
+const FlashcardsApp = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  // Dati estratti dal Capitolo 2 del file "Summary of Corporate Finance (pt.1).pdf"
+  const flashcards = [
+    {
+      id: 1,
+      category: "Decisions",
+      question: "What is the difference between Investment Decision and Financing Decision?",
+      answer: "Investment Decision (Capital Budgeting): Buying real assets (tangible or intangible) to generate future returns. \n\nFinancing Decision (Capital Structure): How to raise cash (Debt vs. Equity) to pay for those investments."
+    },
+    {
+      id: 2,
+      category: "Goal of Corporation",
+      question: "What is the primary financial goal of a corporation?",
+      answer: "To maximize the current market value of shareholders' investment (stock price).\n\n(Not just maximizing short-term profits, which can damage long-term value)."
+    },
+    {
+      id: 3,
+      category: "Agency Theory",
+      question: "What is an Agency Problem?",
+      answer: "A conflict of interest between the Principal (shareholders/owners) and the Agent (managers).\n\nManagers might pursue private benefits (perks, empire building) instead of maximizing shareholder wealth."
+    },
+    {
+      id: 4,
+      category: "Performance",
+      question: "What is EVA (Economic Value Added)?",
+      answer: "A measure of performance that deducts the cost of capital from profits.\n\nFormula: EVA = Income Earned - (Cost of Capital × Investment).\nIt shows if a company is truly creating value above its opportunity cost."
+    },
+    {
+      id: 5,
+      category: "Valuation",
+      question: "Define Net Present Value (NPV) and the NPV Rule.",
+      answer: "NPV = PV(Future Cash Flows) - Initial Investment.\n\nNPV Rule: Accept investments that have a positive Net Present Value (NPV > 0). It measures wealth increase."
+    },
+    {
+      id: 6,
+      category: "Formulas",
+      question: "Formula for Perpetuity vs. Annuity",
+      answer: "Perpetuity (infinite constant flow): PV = C / r\n\nAnnuity (fixed flow for t years): PV = C × [ (1/r) - (1 / (r(1+r)^t)) ]"
+    },
+    {
+      id: 7,
+      category: "Interest Rates",
+      question: "What is the difference between APR and EAR?",
+      answer: "APR (Annual Percentage Rate): Interest annualized using simple interest (Nominal).\n\nEAR (Effective Annual Rate): Interest annualized using compound interest. EAR is always higher than APR if compounding is frequent."
+    },
+    {
+      id: 8,
+      category: "Investment Criteria",
+      question: "What is the Internal Rate of Return (IRR)?",
+      answer: "The discount rate (r) that makes NPV = 0.\n\nRule: Accept if IRR > Opportunity Cost of Capital. (Pitfalls: Multiple IRRs, Mutually Exclusive Projects)."
+    },
+    {
+      id: 9,
+      category: "Investment Criteria",
+      question: "Why is the Payback Rule often flawed?",
+      answer: "1. It ignores the time value of money (TVM).\n2. It ignores all cash flows that occur AFTER the cutoff period."
+    },
+    {
+      id: 10,
+      category: "Capital Rationing",
+      question: "What is the Profitability Index (PI)?",
+      answer: "PI = NPV / Investment.\n\nUsed when capital is limited (rationing) to choose the project with the highest value created per dollar invested."
+    },
+     {
+      id: 11,
+      category: "Bonds",
+      question: "What is the Term Structure of Interest Rates?",
+      answer: "The relationship between interest rates (or yields) and different terms to maturity (short-term vs long-term rates)."
+    }
+  ];
+
+  const handleNext = () => {
+    setIsFlipped(false);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % flashcards.length);
+    }, 200);
+  };
+
+  const handlePrev = () => {
+    setIsFlipped(false);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev - 1 + flashcards.length) % flashcards.length);
+    }, 200);
+  };
+
+  const handleFlip = () => {
+    setIsFlipped(!isFlipped);
+  };
+
+  const handleReset = () => {
+    setIsFlipped(false);
+    setTimeout(() => setCurrentIndex(0), 200);
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4 font-sans text-slate-800">
+      <div className="w-full max-w-2xl">
+        
+        {/* Header */}
+        <div className="mb-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Corporate Finance Ch.2</h1>
+            <p className="text-sm text-slate-500">Exam Prep Flashcards</p>
+          </div>
+          <div className="text-sm font-medium bg-white px-3 py-1 rounded-full shadow-sm border border-slate-200">
+            {currentIndex + 1} / {flashcards.length}
+          </div>
+        </div>
+
+        {/* Card Container */}
+        <div 
+          className="relative h-80 w-full perspective-1000 cursor-pointer group"
+          onClick={handleFlip}
+        >
+          <div className={`relative w-full h-full transition-all duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+            
+            {/* Front of Card */}
+            <div className="absolute w-full h-full bg-white rounded-2xl shadow-xl border-l-4 border-blue-600 flex flex-col items-center justify-center p-8 backface-hidden">
+              <span className="absolute top-6 left-6 text-xs font-bold tracking-wider text-blue-600 uppercase">
+                {flashcards[currentIndex].category}
+              </span>
+              <h2 className="text-2xl font-semibold text-center leading-relaxed">
+                {flashcards[currentIndex].question}
+              </h2>
+              <p className="absolute bottom-6 text-slate-400 text-sm flex items-center gap-2">
+                Click to reveal answer
+              </p>
+            </div>
+
+            {/* Back of Card */}
+            <div className="absolute w-full h-full bg-slate-800 text-white rounded-2xl shadow-xl rotate-y-180 backface-hidden flex flex-col items-center justify-center p-8 border-l-4 border-emerald-400">
+              <span className="absolute top-6 left-6 text-xs font-bold tracking-wider text-emerald-400 uppercase">
+                Answer
+              </span>
+              <p className="text-lg text-center leading-relaxed whitespace-pre-line">
+                {flashcards[currentIndex].answer}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="mt-8 flex justify-between items-center">
+          <button 
+            onClick={handleReset}
+            className="p-3 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+            title="Restart"
+          >
+            <RotateCcw size={20} />
+          </button>
+
+          <div className="flex gap-4">
+            <button 
+              onClick={handlePrev}
+              className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-xl shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all font-medium active:scale-95"
+            >
+              <ArrowLeft size={18} /> Prev
+            </button>
+            <button 
+              onClick={handleNext}
+              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl shadow-md hover:bg-blue-700 hover:shadow-lg transition-all font-medium active:scale-95"
+            >
+              Next <ArrowRight size={18} />
+            </button>
+          </div>
+
+          <div className="w-10"></div> {/* Spacer for centering */}
+        </div>
+
+      </div>
+      
+      {/* CSS for 3D Flip Effect - Usually in a separate CSS file but inline here for portability */}
+      <style>{`
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+      `}</style>
+    </div>
+  );
+};
+
+export default FlashcardsApp;
